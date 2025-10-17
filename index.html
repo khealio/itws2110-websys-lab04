@@ -18,6 +18,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative; /* Needed for absolute positioning of links */
   }
   .weather-container {
     background: white;
@@ -52,6 +53,21 @@
     margin-top: 10px;
     font-weight: bold;
   }
+  .attribution {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 12px;
+    color: #222;
+    line-height: 1.4;
+  }
+  .attribution a {
+    color: #0044cc;
+    text-decoration: none;
+  }
+  .attribution a:hover {
+    text-decoration: underline;
+  }
 </style>
 </head>
 <body>
@@ -62,6 +78,12 @@
     <div class="condition" id="condition">Loading...</div>
     <div class="details" id="details"></div>
     <div class="aqi" id="aqi">Air Quality: --</div>
+  </div>
+
+  <!-- Attribution Links -->
+  <div class="attribution">
+    <div><a href="https://openweathermap.org/" target="_blank">Weather data from OpenWeatherMap</a></div>
+    <div><a href="https://aqicn.org/city/usa/newyork/albany-county-hd/" target="_blank">Air quality data from aqicn.org</a></div>
   </div>
 
 <script>
