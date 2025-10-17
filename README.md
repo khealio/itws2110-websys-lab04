@@ -30,3 +30,6 @@ Make edits to the original output code in order to fix these issues. Do not edit
 Add links to the OpenWeatherMap website (https://openweathermap.org/) and the aqicn page for the Albany County air quality sensor (https://aqicn.org/city/usa/newyork/albany-county-hd/) at the bottom left of the page. 
 
 These links should use the following text, respectively: "Weather data from OpenWeatherMap" "Air quality data from aqicn.org"
+
+#### Prompt 4
+The air quality API will still return data even if there is an error fetching it (e.g. an invalid API key is submitted). Modify the checks to the AQI API call to check the value of the fetched AQI such that if it is invalid (i.e. negative or undefined), "Error fetching AQI data." is displayed.
