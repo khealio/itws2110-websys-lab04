@@ -1,4 +1,4 @@
-# itws2110-lab4
+# itws2110-websys-lab04
 AI generated weather web app
 
 ### Prompts
