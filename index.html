@@ -143,9 +143,16 @@ async function fetchAQI() {
   try {
     const res = await fetch(aqiUrl);
     const data = await res.json();
-    const aqi = data.data.aqi;
-    let meaning = "";
 
+    const aqi = data?.data?.aqi;
+
+    // Validate AQI value
+    if (typeof aqi !== "number" || aqi < 0 || isNaN(aqi)) {
+      document.getElementById("aqi").textContent = "Error fetching AQI data.";
+      return;
+    }
+
+    let meaning = "";
     if (aqi <= 50) meaning = "Good";
     else if (aqi <= 100) meaning = "Moderate";
     else if (aqi <= 150) meaning = "Unhealthy for Sensitive Groups";
