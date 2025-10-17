@@ -25,3 +25,8 @@ Two checks:
 - The site always has some space to scroll, despite there being no need for the site to scroll. Check how the page is being filled, and ensure it does not overflow past the bottom of the viewport at any point. 
 
 Make edits to the original output code in order to fix these issues. Do not edit the original code more than is necessary.
+
+#### Prompt 3
+Add links to the OpenWeatherMap website (https://openweathermap.org/) and the aqicn page for the Albany County air quality sensor (https://aqicn.org/city/usa/newyork/albany-county-hd/) at the bottom left of the page. 
+
+These links should use the following text, respectively: "Weather data from OpenWeatherMap" "Air quality data from aqicn.org"
