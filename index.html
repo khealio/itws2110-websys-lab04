@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Troy, NY Weather & Air Quality</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #87CEEB, #f0f8ff);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .weather-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    padding: 20px 30px;
+    text-align: center;
+    width: 320px;
+  }
+  .weather-icon {
+    font-size: 60px;
+  }
+  .temp {
+    font-size: 48px;
+    font-weight: bold;
+  }
+  .condition {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  .details {
+    font-size: 14px;
+    text-align: left;
+    margin-top: 15px;
+  }
+  .aqi {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+  <div class="weather-container">
+    <div class="weather-icon" id="weather-icon">☀️</div>
+    <div class="temp" id="temperature">--°F</div>
+    <div class="condition" id="condition">Loading...</div>
+    <div class="details" id="details"></div>
+    <div class="aqi" id="aqi">Air Quality: --</div>
+  </div>
+
+<script>
+const OPENWEATHER_API_KEY = "API_KEY"; // <-- Replace with your OpenWeatherMap key
+const AQICN_API_KEY = "API_KEY"; // <-- Replace with your AQICN key
+
+const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=42.73&lon=-73.68&appid=${OPENWEATHER_API_KEY}`;
+const aqiUrl = `https://api.waqi.info/feed/albany/?token=${AQICN_API_KEY}`;
+
+async function fetchWeather() {
+  try {
+    const res = await fetch(weatherUrl);
+    const data = await res.json();
+
+    // Temperature conversion (Kelvin to Fahrenheit)
+    const tempF = (data.main.temp - 273.15) * 9/5 + 32;
+    const feelsLikeF = (data.main.feels_like - 273.15) * 9/5 + 32;
+    const condition = data.weather[0].main;
+    const description = data.weather[0].description;
+    const humidity = data.main.humidity;
+    const rainMM = data.rain ? data.rain["1h"] : null;
+    const rainInches = rainMM ? (rainMM / 25.4).toFixed(2) : null;
+
+    // Select weather icon
+    let icon = "☀️";
+    if (condition.toLowerCase().includes("cloud")) icon = "☁️";
+    else if (condition.toLowerCase().includes("rain")) icon = "🌧️";
+    else if (condition.toLowerCase().includes("snow")) icon = "❄️";
+    else if (condition.toLowerCase().includes("storm")) icon = "⛈️";
+    else if (condition.toLowerCase().includes("mist") || condition.toLowerCase().includes("fog")) icon = "🌫️";
+
+    document.getElementById("weather-icon").textContent = icon;
+    document.getElementById("temperature").textContent = `${tempF.toFixed(1)}°F`;
+    document.getElementById("condition").textContent = `${description}`;
+
+    let details = `
+      Feels like: ${feelsLikeF.toFixed(1)}°F<br>
+      Humidity: ${humidity}%<br>
+    `;
+    if (rainInches) {
+      details += `Expected rain next hour: ${rainInches} in<br>`;
+    }
+
+    document.getElementById("details").innerHTML = details;
+  } catch (err) {
+    document.getElementById("condition").textContent = "Error fetching weather data.";
+    console.error(err);
+  }
+}
+
+async function fetchAQI() {
+  try {
+    const res = await fetch(aqiUrl);
+    const data = await res.json();
+    const aqi = data.data.aqi;
+    let meaning = "";
+
+    if (aqi <= 50) meaning = "Good";
+    else if (aqi <= 100) meaning = "Moderate";
+    else if (aqi <= 150) meaning = "Unhealthy for Sensitive Groups";
+    else if (aqi <= 200) meaning = "Unhealthy";
+    else if (aqi <= 300) meaning = "Very Unhealthy";
+    else meaning = "Hazardous";
+
+    document.getElementById("aqi").textContent = `Air Quality Index: ${aqi} (${meaning})`;
+  } catch (err) {
+    document.getElementById("aqi").textContent = "Error fetching AQI data.";
+    console.error(err);
+  }
+}
+
+fetchWeather();
+fetchAQI();
+</script>
+</body>
+</html>
